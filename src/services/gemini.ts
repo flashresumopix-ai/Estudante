@@ -1,9 +1,24 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+const getApiKey = () => {
+  // Tenta pegar de várias fontes possíveis em ambiente Vite/Browser
+  const key = process.env.GEMINI_API_KEY || (import.meta as any).env?.VITE_GEMINI_API_KEY;
+  
+  if (!key || key === 'undefined' || key === 'MY_GEMINI_API_KEY' || key === '') {
+    return '';
+  }
+  return key;
+};
+
+const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 export async function summarizeText(text: string): Promise<string> {
   if (!text) return "";
+  
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    throw new Error("API Key do Gemini não encontrada. Configure GEMINI_API_KEY ou VITE_GEMINI_API_KEY no seu ambiente de deploy (Netlify/Vercel) e faça um novo deploy.");
+  }
   
   try {
     const response = await ai.models.generateContent({
@@ -15,14 +30,20 @@ export async function summarizeText(text: string): Promise<string> {
     });
     
     return response.text || "Não foi possível gerar o resumo.";
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro ao resumir texto:", error);
-    throw new Error("Falha ao gerar resumo com IA.");
+    const errorMessage = error?.message || "Erro desconhecido na API do Gemini";
+    throw new Error(`Falha ao gerar resumo: ${errorMessage}`);
   }
 }
 
 export async function extractTextFromImage(base64Data: string, mimeType: string): Promise<string> {
   if (!base64Data) return "";
+  
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    throw new Error("API Key do Gemini não encontrada. Configure GEMINI_API_KEY ou VITE_GEMINI_API_KEY no seu ambiente de deploy.");
+  }
   
   try {
     const response = await ai.models.generateContent({
@@ -44,8 +65,9 @@ export async function extractTextFromImage(base64Data: string, mimeType: string)
     });
     
     return response.text || "Não foi possível extrair o texto da imagem.";
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro ao extrair texto da imagem:", error);
-    throw new Error("Falha ao processar imagem com IA.");
+    const errorMessage = error?.message || "Erro desconhecido ao processar imagem";
+    throw new Error(`Falha ao processar imagem: ${errorMessage}`);
   }
 }
