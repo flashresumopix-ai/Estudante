@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #00A3FF;
+  --color-brand-purple: #BF00FF;
+  --color-brand-dark: #0057FF;
+  --color-brand-violet: #8A2BE2;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+}
+
+.gradient-brand {
+  background: linear-gradient(135deg, var(--color-brand-blue) 0%, var(--color-brand-purple) 100%);
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(135deg, var(--color-brand-blue) 0%, var(--color-brand-purple) 100%);
+}
+

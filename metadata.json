@@ -1,0 +1,5 @@
+{
+  "name": "FlashResumo",
+  "description": "App de resumo inteligente de textos e documentos com suporte a PDF, Word, Excel, TXT e Imagens.",
+  "requestFramePermissions": ["camera"]
+}

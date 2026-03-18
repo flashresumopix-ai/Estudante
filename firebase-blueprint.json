@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Summary": {
+      "title": "Summary",
+      "description": "Stored summaries for a user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "originalText": { "type": "string" },
+        "summaryText": { "type": "string" },
+        "fileName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "originalText", "summaryText", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile documents"
+    },
+    "/summaries/{summaryId}": {
+      "schema": "Summary",
+      "description": "User summaries"
+    }
+  }
+}
